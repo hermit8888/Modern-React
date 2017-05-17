@@ -1,26 +1,38 @@
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
 module.exports = {
   entry: [
-    './src/index.js'
+    './src/index.js',
   ],
   output: {
     path: __dirname,
     publicPath: '/',
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
   module: {
     loaders: [{
-      exclude: /node_modules/,
-      loader: 'babel',
+      test: /\.jsx?$/,
+      exclude: /(node_modules|bower_components)/,
+      loader: 'babel-loader',
       query: {
-        presets: ['react', 'es2015', 'stage-1']
-      }
-    }]
+        presets: ['react', 'es2015', 'stage-0'],
+      },
+    },
+    {
+      test: /\.css$/,
+      loaders: ['style-loader', 'css-lodaer', 'autoprefixer-loader?browsers=last 2 versions'],
+    },
+    {
+      test: /\.scss$/,
+      loaders: ['style-loader', 'css-loader', 'autoprefixer-loader?browsers=last 2 versions', 'sass-loader'],
+    }],
   },
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['.js', '.jsx'],
   },
   devServer: {
     historyApiFallback: true,
-    contentBase: './'
-  }
+    contentBase: './',
+  },
+  devtool: process.env.NODE_ENV === 'production' ? undefined : 'cheap-module-eval-source-map',
 };
